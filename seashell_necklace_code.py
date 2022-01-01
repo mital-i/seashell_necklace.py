@@ -6,7 +6,7 @@ for i in range(n):
 
 def solve(grid, length, n, current_shell):
         ans = None
-        def dfs_left(r, c, necklace_length, current_shell):
+        def dfs(r, c, necklace_length, current_shell):
             #we don't need a visited array. 
             #If we change the visited coordinate to '.' we won't visit it again since we only travel to coordinates that are '<'
             graph[r][c] = '.'
@@ -16,13 +16,15 @@ def solve(grid, length, n, current_shell):
                     
             #if the necklace_length reached the size "length" then return the length, otherwise it would return None 
             if necklace_length == length: 
+                if current_shell == '<': 
+                    dfs(r, c, path, '>')
                 ans = path
                 return
                 
             for rr, cc in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]:
                 if 0 <= rr < n and 0 <= cc < n:
                     if grid[rr][cc]==current_shell:
-                        dfs_left(rr, cc, necklace_length + 1, current_shell)
+                        dfs(rr, cc, necklace_length + 1, current_shell)
                             
         #path length starts with length 1 because the shell at (0,0) has to be "<" otherwise 
         #path length defaults to zero
