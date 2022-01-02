@@ -4,38 +4,55 @@ graph = []
 for i in range(n): 
     graph.append(input())
 
-def solve(grid, length, n, current_shell):
-        ans = None
-        def dfs(r, c, necklace_length, current_shell):
-            #we don't need a visited array. 
-            #If we change the visited coordinate to '.' we won't visit it again since we only travel to coordinates that are '<'
-            graph[r][c] = '.'
-            nonlocal ans
-            if ans:
-                return
-                    
-            #if the necklace_length reached the size "length" then return the length, otherwise it would return None 
-            if necklace_length == length: 
-                if current_shell == '<': 
-                    dfs(r, c, path, '>')
-                ans = path
-                return
-                
-            for rr, cc in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]:
-                if 0 <= rr < n and 0 <= cc < n:
-                    if grid[rr][cc]==current_shell:
-                        dfs(rr, cc, necklace_length + 1, current_shell)
-                            
-        #path length starts with length 1 because the shell at (0,0) has to be "<" otherwise 
-        #path length defaults to zero
-        dfs_left(0, 0, 1, current_shell)
-        return ans
+'''
+3
+<<<
+>><
+>>>
 
-#if the first shell is ">" then a necklace can't be made at all so the length of the necklace would be zero
+2
+<>
+<>
+
+'''
+
+def find_max_length(graph):
+    string = None
+    def dfs(n, graph, r, c, visited, path, current_max): 
+        print(r, c, "hi", path)
+        nonlocal string 
+        if string: 
+            return
+        
+        if graph[r][c] == '>' and is_balanced(path):
+            string = path
+            return 
+        
+        visited.add((r, c))
+        if graph[r][c] == '>' and not is_balanced(path): 
+            for (rr, cc) in [(r-1, c), (r, c-1), (r+1, c), (r, c+1)]: 
+                if 0<=rr<n and 0<=cc<n and (rr, cc) not in visited and graph[rr][cc] == '>': 
+                    dfs(n, graph, rr, cc, visited.copy(), path+'>', current_max)
+            
+        if graph[r][c] == '<': 
+            for (rr, cc) in [(r-1, c), (r, c-1), (r+1, c), (r, c+1)]: 
+                if 0<=rr<n and 0<=cc<n and (rr, cc) not in visited: 
+                    dfs(n, graph, rr, cc, visited.copy(), path+graph[rr][cc], current_max)
+            
+    dfs(len(graph), graph, 0, 0, set(()), '<', 0)
+    return string
+        
+def is_balanced(string): 
+    i, j = 0, len(string) - 1
+    while j>i: 
+        if string[i]!='<' or string[j]!='>': 
+            return False
+        i+=1
+        j-=1
+            
+    return True
+    
 if graph[0][0] == '>':
     print(0)
 else: 
-    #check if there is a seashell path of this length made up of '<'
-    print(solve(graph, 4, n, '<'))
-    #check if there is a seashell path of this length made up of '>'
-    #how do I do this? I need to make sure the dfs starts from the last coordinate that the dfs function ended at
+    print(find_max_length(graph))
