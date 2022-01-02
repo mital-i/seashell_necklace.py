@@ -4,15 +4,10 @@ graph = []
 for i in range(n): 
     graph.append(input())
 
-'''
-3
-<<<
->><
->>>
-
+''' sample input
 2
 <>
-<>
+<> answer: 4
 
 '''
 
