@@ -11,14 +11,22 @@ for i in range(n):
 
 '''
 
+''' sample input (code not working) 
+4
+<<>>
+<><<
+<<><
+>>><
+answer should be: 8
+my answer: 6
+
+'''
+
 def find_max_length(graph):
     string = None
     def dfs(n, graph, r, c, visited, path, current_max): 
         print(r, c, "hi", path)
-        nonlocal string 
-        if string: 
-            return
-        
+        nonlocal string         
         if graph[r][c] == '>' and is_balanced(path):
             string = path
             return 
