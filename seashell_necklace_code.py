@@ -4,7 +4,7 @@ graph = []
 for i in range(n): 
     graph.append(input())
 
-''' sample input
+''' sample input (code working)
 2
 <>
 <> answer: 4
